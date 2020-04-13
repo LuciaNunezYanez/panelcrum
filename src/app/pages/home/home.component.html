@@ -1,0 +1,188 @@
+<div class="container-fluid pt-3">
+    <div class="jumbotron py-3">
+        <h3 class="text-center mb-4">Registrar nuevo paciente</h3>
+        <form autocomplete="off" #data="ngForm" (ngSubmit)="terminarRegistro(data)">
+
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label>Nombre (s):</label>
+                    <input type="text" class="form-control" id="inputNanePaciente" name="nombrePaciente" ngModel required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label>Apellido paterno:</label>
+                    <input type="text" class="form-control" id="inputPaternoPaciente" name="paternoPaciente" ngModel required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label>Apellido materno:</label>
+                    <input type="text" class="form-control" id="inputMaternoPaciente" name="maternoPaciente" ngModel>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-8">
+                    <label>Motivo de la video-llamada:</label>
+                    <textarea class="form-control" id="textareaMotivo" rows="" name="motivo" ngModel required></textarea>
+                </div>
+                <div class="form-group col-md-4">
+                    <label>Teléfono móvil:</label>
+                    <input type="text" class="form-control" id="inputTelefonoPaciente" name="telefonoPaciente" ngModel required>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-group col-12">
+                    <input type="text" class="form-control" placeholder="Link no generado..." value="{{this.link}}" disabled aria-label="Recipient 's username with two button addons" id="link" aria-describedby="button-addon4" name="link">
+
+                    <div class="input-group-append" id="button-addon4">
+                        <button class="btn btn-outline-info"><i class="fa fa-copy"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row justify-content-center mt-3">
+                <button class="btn btn-success" type="submit"> Terminar registro </button>
+
+            </div>
+        </form>
+
+    </div>
+    <!-- TERMINA JUMBOTRON -->
+
+
+    <div class="jumbotron py-3">
+        <h3 class="text-center text-info mb-3"> Suscripciones</h3>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col" class="text-center">Folio</th>
+                    <th scope="col" class="text-center">Estatus</th>
+                    <th scope="col" class="text-center">Nombre completo</th>
+                    <th scope="col" class="text-center">Fecha creación</th>
+                    <th scope="col" class="text-center">Hora creación</th>
+                    <th scope="col" class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row" class="text-center">1</th>
+                    <td class="text-center">
+                        <button class="btn btn-success mr-1" data-toggle="modal" data-target="#modalVideoLlamada" type="button"><i class="fa fa-phone"></i> Responder</button>
+                    </td>
+                    <td class="text-center">Lucia Guadalupe Nuñez Yañez</td>
+                    <td class="text-center">02 de Abril del 2020</td>
+                    <td class="text-center">09:12:50 hrs</td>
+                    <td class="text-center">
+                        <button class="btn btn-outline-danger mr-1"><i class="fa fa-close"></i> Terminar</button>
+                        <button class="btn btn-outline-info mr-1" data-toggle="modal" data-target="#modalPaciente" type="button"><i class="fa fa-file"></i> Más..</button>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row" class="text-center">2</th>
+                    <td class="text-center">
+                        <h6 class="text-danger h6">En espera</h6>
+                    </td>
+                    <td class="text-center">Lucia Guadalupe Nuñez Yañez</td>
+                    <td class="text-center">02 de Abril del 2020</td>
+                    <td class="text-center">09:12:50 hrs</td>
+                    <td class="text-center">
+                        <button class="btn btn-outline-danger mr-1"><i class="fa fa-close"></i> Terminar</button>
+                        <button class="btn btn-outline-info mr-1" data-toggle="modal" data-target="#modalPaciente" type="button"><i class="fa fa-file"></i> Más..</button>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row" class="text-center">3</th>
+                    <td class="text-center">
+                        <h6 class="text-danger h6">En espera</h6>
+                    </td>
+                    <td class="text-center">Lucia Guadalupe Nuñez Yañez</td>
+                    <td class="text-center">02 de Abril del 2020</td>
+                    <td class="text-center">09:12:50 hrs</td>
+                    <td class="text-center">
+                        <button class="btn btn-outline-danger mr-1"><i class="fa fa-close"></i> Terminar</button>
+                        <button class="btn btn-outline-info mr-1" data-toggle="modal" data-target="#modalPaciente" type="button"><i class="fa fa-file"></i> Más..</button>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade bd-example-modal-xl" id="modalVideoLlamada" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Video llamada con Lucia Nuñez</h5>
+            </div>
+            <div class="modal-body">
+                <div class="row justify-content-center pt-3 pb-3">
+                    <button class="btn btn-success mr-3" id="btnIniciar" (click)="iniciarGrabacion()" #btnIniciar>Comenzar transmisión</button>
+                    <button class="btn btn-danger" id="btnDetener" disabled (click)="detener()" #btnDetener> Detener transmisión </button>
+                </div>
+
+                <div class="row justify-content-center mb-4">
+                    <video class="col-11" id="videoLocal" autoplay controls="true" #videoLocal style="width: 100% !important;"></video>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Salir</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade bd-example-modal-lg" id="modalPaciente" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="h5 modal-title" id="exampleModalLabel">Información de la consulta</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label class="col-form-label">Nombre (s):</label>
+                                <input type="text" class="form-control" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-form-label">Apellido Paterno:</label>
+                                <input type="text" class="form-control" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-form-label">Apellido Materno:</label>
+                                <input type="text" class="form-control" disabled>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label class="col-form-label">Usuario C5:</label>
+                                <input type="text" class="form-control" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-form-label">Fecha y hora:</label>
+                                <input type="text" class="form-control" disabled>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-12">
+                            <label>Motivo de la video-llamada:</label>
+                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="" disabled></textarea>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
