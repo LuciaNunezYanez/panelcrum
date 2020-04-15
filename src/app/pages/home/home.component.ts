@@ -77,7 +77,8 @@ export class HomeComponent implements OnInit {
     }
     
     this.link = this._link.generarLink();
-    this.skLogin();
+    this.skLoginEspera();
+    this._sk.escucharConsultas();
   }
 
   ngOnInit(): void {
@@ -200,15 +201,35 @@ export class HomeComponent implements OnInit {
     
   }
 
-  skLogin(){
+  skLoginEspera(){
     const data = {
       sala: 'medico',
-      link: 'this.link', 
+      link: 'espera', 
       status: 0
     };
 
-    this._sk.emitirLogin(data, function(respuesta) {
-      console.log(respuesta);
+    this._sk.emitirloginMedicoEspera(data, function(error, respuesta) {
+      if(error){
+        Swal.fire('Atención', error.message, 'error');
+      } else {
+        console.log(respuesta);
+      }
+    });
+  }
+
+  skLoginConsulta(){
+    const data = {
+      sala: 'medico',
+      link: this.link, 
+      status: 0
+    };
+
+    this._sk.emitirLoginConsulta(data, function(error, respuesta) {
+      if(error){
+        Swal.fire('Atención', error.message, 'error');
+      } else {
+        console.log(respuesta);
+      }
     });
   }
   
