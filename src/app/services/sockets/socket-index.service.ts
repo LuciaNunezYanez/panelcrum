@@ -6,6 +6,7 @@ import { Socket } from 'ngx-socket-io';
 })
 export class SocketIndexService {
 
+  consultas: any [];
   constructor( private socket: Socket) { }
 
   emitirLoginConsulta(data, callback?: Function){
@@ -18,7 +19,15 @@ export class SocketIndexService {
 
   escucharConsultas(){
     this.socket.on('listaConsultasActualizada', (consultas) => {
+      this.consultas = consultas;
       console.log(consultas);
     })
+  }
+
+  emitirBuscarOferta(link: string, callback: Function){
+    const oferta = {
+      link
+    }
+    this.socket.emit('buscarOferta', oferta, callback);
   }
 }

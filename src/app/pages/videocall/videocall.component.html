@@ -1,0 +1,22 @@
+<div class="container-fluid" *ngIf="this.hasOffer">
+    <div class="modal-body">
+        <div class="row justify-content-center align-items-center mb-3">
+            <input class="form-control mr-3 col-4 text-center" type="text" value="LUCIA NUÑEZ" disabled>
+            <button class="btn btn-success mr-3 col-2" id="btnIniciar" (click)="iniciarGrabacion()" #btnIniciar>Comenzar transmisión</button>
+            <button class="btn btn-danger col-2" id="btnDetener" disabled (click)="detener()" #btnDetener> Detener transmisión </button>
+        </div>
+        <div class="row justify-content-center mb-4">
+            <video class="col-9" id="videoLocal" autoplay controls="true" #videoLocal style="width: 100% !important;"></video>
+        </div>
+    </div>
+
+</div>
+
+<div class="container-fluid" *ngIf="this.hasOffer === false">
+    <div class="jumbotron jumbotron-fluid mt-3">
+        <div class="container">
+            <h1 class="display-4">Atención</h1>
+            <p class="lead">El usuario no está conectado.</p>
+        </div>
+    </div>
+</div>

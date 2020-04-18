@@ -63,40 +63,15 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <th scope="row" class="text-center">1</th>
+                <tr *ngFor="let consult of this._sk.consultas; let i = index">
+                    <th scope="row" class="text-center">{{consult.id_consulta}}</th>
                     <td class="text-center">
-                        <button class="btn btn-success mr-1" data-toggle="modal" data-target="#modalVideoLlamada" type="button"><i class="fa fa-phone"></i> Responder</button>
+                        <button class="btn btn-success mr-1" *ngIf="consult.sk_estatus === 1" data-toggle="modal" (click)='abrirVideoLlamada(consult.link)' type="button"><i class="fa fa-phone"></i> Responder</button>
+                        <h6 class="text-danger h6" *ngIf="consult.sk_estatus === 0">En espera</h6>
                     </td>
-                    <td class="text-center">Lucia Guadalupe Nuñez Yañez</td>
-                    <td class="text-center">02 de Abril del 2020</td>
-                    <td class="text-center">09:12:50 hrs</td>
-                    <td class="text-center">
-                        <button class="btn btn-outline-danger mr-1"><i class="fa fa-close"></i> Terminar</button>
-                        <button class="btn btn-outline-info mr-1" data-toggle="modal" data-target="#modalPaciente" type="button"><i class="fa fa-file"></i> Más..</button>
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row" class="text-center">2</th>
-                    <td class="text-center">
-                        <h6 class="text-danger h6">En espera</h6>
-                    </td>
-                    <td class="text-center">Lucia Guadalupe Nuñez Yañez</td>
-                    <td class="text-center">02 de Abril del 2020</td>
-                    <td class="text-center">09:12:50 hrs</td>
-                    <td class="text-center">
-                        <button class="btn btn-outline-danger mr-1"><i class="fa fa-close"></i> Terminar</button>
-                        <button class="btn btn-outline-info mr-1" data-toggle="modal" data-target="#modalPaciente" type="button"><i class="fa fa-file"></i> Más..</button>
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row" class="text-center">3</th>
-                    <td class="text-center">
-                        <h6 class="text-danger h6">En espera</h6>
-                    </td>
-                    <td class="text-center">Lucia Guadalupe Nuñez Yañez</td>
-                    <td class="text-center">02 de Abril del 2020</td>
-                    <td class="text-center">09:12:50 hrs</td>
+                    <td class="text-center">{{consult.nombre_paciente | uppercase}} {{consult.apellido_pat_paciente | uppercase}} {{consult.apellido_mat_paciente | uppercase}}</td>
+                    <td class="text-center">{{consult.fecha_creacion | date:'longDate'}}</td>
+                    <td class="text-center">{{consult.hora_creacion }} hrs</td>
                     <td class="text-center">
                         <button class="btn btn-outline-danger mr-1"><i class="fa fa-close"></i> Terminar</button>
                         <button class="btn btn-outline-info mr-1" data-toggle="modal" data-target="#modalPaciente" type="button"><i class="fa fa-file"></i> Más..</button>
@@ -108,28 +83,6 @@
     </div>
 </div>
 
-<div class="modal fade bd-example-modal-xl" id="modalVideoLlamada" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabel">Video llamada con Lucia Nuñez</h5>
-            </div>
-            <div class="modal-body">
-                <div class="row justify-content-center pt-3 pb-3">
-                    <button class="btn btn-success mr-3" id="btnIniciar" (click)="iniciarGrabacion()" #btnIniciar>Comenzar transmisión</button>
-                    <button class="btn btn-danger" id="btnDetener" disabled (click)="detener()" #btnDetener> Detener transmisión </button>
-                </div>
-
-                <div class="row justify-content-center mb-4">
-                    <video class="col-11" id="videoLocal" autoplay controls="true" #videoLocal style="width: 100% !important;"></video>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Salir</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 
 <div class="modal fade bd-example-modal-lg" id="modalPaciente" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
