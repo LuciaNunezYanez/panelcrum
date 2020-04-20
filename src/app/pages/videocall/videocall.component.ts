@@ -16,9 +16,9 @@ export class VideocallComponent implements OnInit {
   // p = navigator.mediaDevices.getUserMedia();
   @ViewChild('videoLocal', {static: false}) videoLocal:ElementRef;
 
-  constraints = {
-    'video': true
-  }
+  // constraintsAudio = {
+  //   'audio': true
+  // }
 
   videoSource = null;
   mediaDevices: any;
@@ -32,53 +32,75 @@ export class VideocallComponent implements OnInit {
 
   // HTML Elements
   vidLoc;
+  vidRem;
   btnIniciar;
   btnDetener;
 
   offer;
+  ofertaRecibida;
   hasOffer: Boolean;
 
   constructor(private routerActive:  ActivatedRoute,
               private _sk: SocketIndexService,
               private _senalizacion : SenalizacionService) {
 
+    
+
+   
+    this.obtenerDispositivosConectados();
+    
+
     this.routerActive.params.subscribe( (parametros: any) => {
       try {
         this.link = parametros.link;
         this.hasOffer = false;
-        this.emitirBuscarOferta();
+        this.hayOferta();
+        this._sk.escucharCandidatos(this.link);
       } catch (error) {
         alert('Link incorrecto')
       }
     });
 
-    this.obtenerDispositivosConectados();
     
    }
 
   ngOnInit(): void {
     this.hasOffer = false;
     this.vidLoc = document.getElementById('videoLocal');
+    this.vidRem = document.getElementById('videoRemoto');
     this.btnIniciar = document.getElementById('btnIniciar');
     this.btnDetener = document.getElementById('btnDetener');
     
   }
 
-  emitirBuscarOferta(){
+
+  hayOferta(){
     this._sk.emitirBuscarOferta(this.link, (error: any, respuesta: any ) => {
       if(error){
-        console.log('El error dice: ', error);
+        console.log(error);
       } else {
-        console.log('La respuesta dice: ', respuesta);
+        // console.log(respuesta);
         // La oferta es
-  
         if (respuesta.offer) {
           this.hasOffer = true;
           this.offer = respuesta.offer;
-          this._senalizacion.generarRespuesta(respuesta, this.link);
+          this.ofertaRecibida = respuesta;
+          this.obtenerVideoLocal();
+          // this.iniciar();
+          //this._senalizacion.generarRespuesta(respuesta, this.link);
         }
       }
     });
+  }
+
+  obtenerVideoLocal(){
+    this._senalizacion.inicializar();
+    this._senalizacion.obtenerVideoLocal(this.vidLoc, this.vidRem);
+    
+    
+  }
+  comenzarTransmision(){
+    this._senalizacion.generarRespuesta(this.ofertaRecibida, this.link);
   }
 
   obtenerDispositivosConectados(){
@@ -102,7 +124,7 @@ export class VideocallComponent implements OnInit {
             .then(devices => {
                 devices.forEach(device => {
                     // console.log(device);
-                    console.log(device.kind.toUpperCase(), device.label);
+                    console.log(device.kind.toUpperCase() + ' -X- '+  device.label);
                     //, device.deviceId
                 })
                 console.log('----------------------------------');
@@ -110,83 +132,84 @@ export class VideocallComponent implements OnInit {
             .catch(err => {
                 console.log(err.name, err.message);
             })
+
+            
     }
   }
 
-  iniciarGrabacion(){
-    this.promesaDetenerGrabacion(this.vidLoc)
-    .then( resp => {
-      console.log('Iniciaré la cámara ya que terminé bien.');
-      this.iniciar();
-    })
-    .catch( error => {
-      console.log(error);
-    } );
+  // iniciarGrabacion(){
+  //   this.promesaDetenerGrabacion(this.vidLoc)
+  //   .then( resp => {
+  //     console.log('Iniciaré la cámara ya que terminé bien.');
+  //     // this.iniciar();
+  //   })
+  //   .catch( error => {
+  //     console.log(error);
+  //   } );
     
-  }
+  // }
 
-  iniciar(){
-    console.log('Iniciando getUserMedia.. (Esperar)');
+  // iniciar(){
+  //   console.log('Iniciando getUserMedia.. (Esperar)');
 
-    this.deshabilitarBotones();
-    const constraints = { 'video': true, 'audio': true };
-        
-    navigator.mediaDevices.getUserMedia(constraints).then( (stream: MediaStream) => {
-      console.log('Ya conseguí stream');
-      console.log(stream);
-      this.streaming = stream;
-      this.vidLoc.srcObject = stream;
-    })
-    .catch( (error) => {
-      console.log('==> CATCH <==');
-      console.log(error.name);
-      if (error.name === 'PermissionDeniedError') {
-       alert('No se han otorgado permisos para usar su cámara y '+
-       'micrófono, debe permitir que la página acceda a sus dispositivos en' +
-       'orden.');
-      } else if (error.name === 'NotFoundError'){
-        alert('No hay un dispositivo de video conectado');
-      } else {
-        alert(error.name);
-      }
-      console.error(error);
-    });
-  }
+  //   // this.deshabilitarBotones();
+            
+  //   navigator.mediaDevices.getUserMedia(this.constraintsAudio).then( (stream: MediaStream) => {
+  //     console.log('(Bien) Ya conseguí stream');
+  //     // console.log(stream);
+  //     this.streaming = stream;
+  //     this.vidLoc.srcObject = stream;
+  //   })
+  //   .catch( (error) => {
+  //     console.log('(Mal) ==> CATCH <==');
+  //     console.log(error.name);
+  //     if (error.name === 'PermissionDeniedError') {
+  //      alert('No se han otorgado permisos para usar su cámara y '+
+  //      'micrófono, debe permitir que la página acceda a sus dispositivos en' +
+  //      'orden.');
+  //     } else if (error.name === 'NotFoundError'){
+  //       alert('No hay un dispositivo de video conectado');
+  //     } else {
+  //       alert(error.name);
+  //     }
+  //     console.error(error);
+  //   });
+  // }
 
-  detener(){
-    // this.detenerGrabacion(this.vidLoc);
-    this.promesaDetenerGrabacion(this.vidLoc)
-    .then( resp => {
-      console.log( resp );
-      this.deshabilitarBotones();
-    })
-    .catch( error => {
-      console.log( error );
-    } );
-  }
+  // detener(){
+  //   // this.detenerGrabacion(this.vidLoc);
+  //   this.promesaDetenerGrabacion(this.vidLoc)
+  //   .then( resp => {
+  //     console.log( resp );
+  //     this.deshabilitarBotones();
+  //   })
+  //   .catch( error => {
+  //     console.log( error );
+  //   } );
+  // }
   
-  promesaDetenerGrabacion( videoElement ): Promise<String>{
-    return new Promise( (resolve, reject)=>{
-      try {
-        const stream = videoElement.srcObject;
-        // Si existe stream 
-        if(stream){
-          console.log('Voy a detener la grabación');
-          const tracks = stream.getTracks();
-          tracks.forEach( function(track){
-            track.stop();
-          });
-          videoElement.srcObject = null;
-          resolve('Ha terminado correctamente la camara');
-        } else {
-          resolve('No existe stream que detener');
-        }
-      } catch (error) {
-        reject(error);
-      }
-    })
+  // promesaDetenerGrabacion( videoElement ): Promise<String>{
+  //   return new Promise( (resolve, reject)=>{
+  //     try {
+  //       const stream = videoElement.srcObject;
+  //       // Si existe stream 
+  //       if(stream){
+  //         console.log('Voy a detener la grabación');
+  //         const tracks = stream.getTracks();
+  //         tracks.forEach( function(track){
+  //           track.stop();
+  //         });
+  //         videoElement.srcObject = null;
+  //         resolve('Ha terminado correctamente la camara');
+  //       } else {
+  //         resolve('No existe stream que detener');
+  //       }
+  //     } catch (error) {
+  //       reject(error);
+  //     }
+  //   })
 
-  }
+  // }
 
   deshabilitarBotones(){
     this.btnIniciar.disabled = !this.btnIniciar.disabled;

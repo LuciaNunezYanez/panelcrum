@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
+import { SenalizacionService } from '../senalizacion/senalizacion.service';
 
 @Injectable({
   providedIn: 'root'
@@ -7,7 +8,7 @@ import { Socket } from 'ngx-socket-io';
 export class SocketIndexService {
 
   consultas: any [];
-  constructor( private socket: Socket) { }
+  constructor( private socket: Socket, private _skSenalizacion: SenalizacionService) { }
 
   emitirLoginConsulta(data, callback?: Function){
     this.socket.emit('loginConsulta', data, callback);
@@ -21,6 +22,13 @@ export class SocketIndexService {
     this.socket.on('listaConsultasActualizada', (consultas) => {
       this.consultas = consultas;
       console.log(consultas);
+    })
+  }
+
+  escucharCandidatos(link: string){
+    console.log('Escuchar candidatos de ', link);
+    this.socket.on(`candidatoPM${link}`, (data: any) =>{
+      this._skSenalizacion.agregarCandidato(data);
     })
   }
 
